@@ -1,0 +1,24 @@
+{
+  "sorular": [
+    {
+      "soru": "merhaba",
+      "cevap": "Merhaba nas\u0131ls\u0131n\u0131z ?"
+    },
+    {
+      "soru": "\u0130yiyim sen nas\u0131ls\u0131n ?",
+      "cevap": "Bende iyiyim"
+    },
+    {
+      "soru": "c",
+      "cevap": "Bu c harfi"
+    },
+    {
+      "soru": "iyiyim",
+      "cevap": "Buna sevindim"
+    },
+    {
+      "soru": "ff",
+      "cevap": "Bu bir hex verisi olabilir"
+    }
+  ]
+}

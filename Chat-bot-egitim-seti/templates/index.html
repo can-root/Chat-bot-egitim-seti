@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sohbet Botu</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .theme-light {
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .theme-dark {
+            background-color: #333;
+            color: #f4f4f4;
+        }
+
+        #chatbox {
+            border: 1px solid #ccc;
+            padding: 10px;
+            height: 300px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            background-color: inherit;
+            color: inherit;
+        }
+
+        #soru {
+            width: 80%;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+
+        #gonder, #tema-gonder {
+            padding: 10px;
+            margin-top: 10px;
+        }
+
+        #tema-gonder {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        #tema-gonder:hover {
+            background-color: #0056b3;
+        }
+
+        #cevap-mesaj {
+            color: #007bff;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="theme-light">
+    <h1>Sohbet Botu</h1>
+    <button id="tema-gonder">Karanlık Tema</button>
+    <div id="chatbox"></div>
+    <input type="text" id="soru" placeholder="Sorunuzu yazın...">
+    <button id="gonder">Gönder</button>
+    <div id="cevap-mesaj"></div>
+
+    <script>
+        function yazdirHarfiHarfi(metin, hedef, callback) {
+            let index = 0;
+            const interval = setInterval(() => {
+                if (index < metin.length) {
+                    $(hedef).append(metin[index++]);
+                } else {
+                    clearInterval(interval);
+                    if (callback) callback();
+                }
+            }, 50);
+        }
+
+        function mesajlariYukle() {
+            const mesajlar = JSON.parse(localStorage.getItem('mesajlar')) || [];
+            mesajlar.forEach(mesaj => {
+                $('#chatbox').append(mesaj);
+            });
+        }
+
+        function mesajlariKaydet() {
+            const mesajlar = $('#chatbox').children().map((index, elem) => $(elem).prop('outerHTML')).get();
+            localStorage.setItem('mesajlar', JSON.stringify(mesajlar));
+        }
+
+        $(document).ready(function() {
+            mesajlariYukle();
+
+            $('#gonder').click(function() {
+                var soru = $('#soru').val();
+                $('#soru').prop('disabled', true);
+                $('#cevap-mesaj').text('Cevap gönderiliyor...');
+
+                $.post('/soru', { soru: soru }, function(data) {
+                    const kullaniciMesaji = '<div><strong>Siz:</strong> ' + soru + '</div>';
+                    const botMesaji = '<div><strong>S-Bot:</strong> </div>';
+
+                    $('#chatbox').append(kullaniciMesaji);
+                    $('#chatbox').append(botMesaji);
+
+                    yazdirHarfiHarfi(data.cevap, '#chatbox div:last-child', function() {
+                        $('#soru').prop('disabled', false);
+                        $('#cevap-mesaj').text(''); // Mesajı temizle
+                        mesajlariKaydet(); // Mesajları kaydet
+                    });
+
+                    $('#soru').val('');
+                    $('#chatbox').scrollTop($('#chatbox')[0].scrollHeight);
+                });
+            });
+
+            $('#soru').keypress(function(e) {
+                if (e.which == 13) {
+                    $('#gonder').click();
+                }
+            });
+
+            $('#tema-gonder').click(function() {
+                var currentTheme = $('body').hasClass('theme-light') ? 'light' : 'dark';
+                if (currentTheme === 'light') {
+                    $('body').removeClass('theme-light').addClass('theme-dark');
+                    $('#tema-gonder').text('Aydınlık Tema');
+                } else {
+                    $('body').removeClass('theme-dark').addClass('theme-light');
+                    $('#tema-gonder').text('Karanlık Tema');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
