@@ -1,0 +1,6 @@
+flask
+difflib
+json
+gtts
+playsound
+os
