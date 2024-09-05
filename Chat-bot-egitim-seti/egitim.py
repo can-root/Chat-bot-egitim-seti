@@ -25,9 +25,9 @@ def bot():
             verilecek_cevap = cevabini_bul(gelen_sonuc, veri)
             print(f"Bot: {verilecek_cevap}")
         else:
-            yeni_cevap = input("Öğretmek için 'geç' yazabilir ya da bir şey öğretebilirsiniz: ")
+            yeni_cevap = input("Atlamak için 'atla' yazabilir ya da bir şey öğretebilirsiniz: ")
 
-            if yeni_cevap != 'geç':
+            if yeni_cevap != 'atla':
                 veri["sorular"].append({
                     "soru": soru,
                     "cevap": yeni_cevap
