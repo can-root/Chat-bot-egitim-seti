@@ -1,4 +1,4 @@
-from difflib import get_close_matches as yakin_sonuclari_getir
+from difflib import get_close_matches as yakin_sonuclari_al
 import json
 
 def veritabanini_yukle():
@@ -38,7 +38,7 @@ def bot():
                 print("Öğretmek için bir şey yazmadınız.")
 
 def yakin_sonuc(soru, sorular):
-    eslesen = yakin_sonuclari_getir(soru, sorular, n=1, cutoff=0.7)
+    eslesen = yakin_sonuclari_al(soru, sorular, n=1, cutoff=0.7)
     return eslesen[0] if eslesen else None
 
 def cevabini_bul(soru, veri):
